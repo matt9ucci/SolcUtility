@@ -10,7 +10,10 @@ Copyright            = '(c) Masatoshi Higuchi. All rights reserved.'
 Description          = 'PowerShell module for Solidity compiler (solc)'
 PowerShellVersion    = '6.0'
 
-FunctionsToExport = @('New-StandardJsonInput')
+FunctionsToExport = @(
+	'Get-SolcVersion'
+	'New-StandardJsonInput'
+)
 CmdletsToExport   = @()
 VariablesToExport = @()
 AliasesToExport   = @()

@@ -49,3 +49,18 @@ function New-StandardJsonInput {
 
 	$hashTable | ConvertTo-Json -Depth 4
 }
+
+<#
+.SYNOPSIS
+	Returns solc version (e.g. 0.4.24)
+.EXAMPLE
+	Get-SolcVersion
+	# returns 0.4.24
+.EXAMPLE
+	Get-SolcVersion -Full
+	# returns 0.4.24+commit.6ae8fb59.Windows.msvc
+#>
+function Get-SolcVersion([switch]$Full) {
+	$pattern = if ($Full) { 'Version:(.*)' } else { 'Version:(.*)\+.*' }
+	(solc --version | Select-String $pattern -List).Matches[0].Groups[1].Value.Trim()
+}
