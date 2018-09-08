@@ -11,6 +11,7 @@ Description          = 'PowerShell module for Solidity compiler (solc)'
 PowerShellVersion    = '6.0'
 
 FunctionsToExport = @(
+	'ConvertTo-StandardJsonOutput'
 	'Get-SolcVersion'
 	'New-StandardJsonInput'
 )

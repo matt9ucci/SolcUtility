@@ -52,6 +52,21 @@ function New-StandardJsonInput {
 
 <#
 .SYNOPSIS
+	Converts from solc standard JSON input to output
+.EXAMPLE
+	New-StandardJsonInput $HOME\HelloWorld.sol | ConvertTo-StandardJsonOutput
+#>
+function ConvertTo-StandardJsonOutput {
+	param (
+		[Parameter(Mandatory, ValueFromPipeline)]
+		[string]$StandardJsonInput
+	)
+
+	$StandardJsonInput | solc --standard-json --allow-paths .
+}
+
+<#
+.SYNOPSIS
 	Returns solc version (e.g. 0.4.24)
 .EXAMPLE
 	Get-SolcVersion
