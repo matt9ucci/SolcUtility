@@ -79,3 +79,26 @@ function Get-SolcVersion([switch]$Full) {
 	$pattern = if ($Full) { 'Version:(.*)' } else { 'Version:(.*)\+.*' }
 	(solc --version | Select-String $pattern -List).Matches[0].Groups[1].Value.Trim()
 }
+
+<#
+.SYNOPSIS
+	Compiles Solidity source code like solc
+.EXAMPLE
+	solcps $HOME\HelloWorld.sol
+.EXAMPLE
+	solcps -Path $HOME\HelloWorld.sol -EvmVersion byzantium
+#>
+function solcps {
+	param (
+		[Parameter(Position = 0, HelpMessage = '*.sol file location')]
+		[Alias('Url')]
+		[string[]]$Path,
+		[ValidateSet('homestead', 'tangerineWhistle', 'spuriousDragon', 'byzantium', 'constantinople')]
+		[string]$EvmVersion,
+		[uint64]$OptimizeRuns,
+		[ValidateSet('abi', 'ast', 'devdoc', 'evm', 'evm.assembly', 'evm.bytecode', 'evm.bytecode.linkReferences', 'evm.bytecode.object', 'evm.bytecode.opcodes', 'evm.bytecode.sourceMap', 'evm.deployedBytecode', 'evm.deployedBytecode.linkReferences', 'evm.deployedBytecode.object', 'evm.deployedBytecode.opcodes', 'evm.deployedBytecode.sourceMap', 'evm.gasEstimates', 'evm.legacyAssembly', 'evm.methodIdentifiers', 'ewasm', 'ewasm.wast', 'ewasm.wasm', 'ir', 'legacyAST', 'metadata', 'userdoc')]
+		[string[]]$Artifact
+	)
+
+	New-StandardJsonInput @PSBoundParameters | ConvertTo-StandardJsonOutput
+}

@@ -14,6 +14,7 @@ FunctionsToExport = @(
 	'ConvertTo-StandardJsonOutput'
 	'Get-SolcVersion'
 	'New-StandardJsonInput'
+	'solcps'
 )
 CmdletsToExport   = @()
 VariablesToExport = @()
