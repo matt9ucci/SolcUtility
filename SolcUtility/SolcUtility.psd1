@@ -13,6 +13,7 @@ PowerShellVersion    = '6.0'
 FunctionsToExport = @(
 	'ConvertTo-StandardJsonOutput'
 	'Get-SolcVersion'
+	'Measure-GasEstimate'
 	'New-StandardJsonInput'
 	'solcps'
 )

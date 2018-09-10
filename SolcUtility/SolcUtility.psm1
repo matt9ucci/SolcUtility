@@ -67,6 +67,62 @@ function ConvertTo-StandardJsonOutput {
 
 <#
 .SYNOPSIS
+	Estimates gas
+.EXAMPLE
+	Measure-GasEstimate $HOME\HelloWorld.sol
+.EXAMPLE
+	Measure-GasEstimate -Path $HOME\HelloWorld.sol -EvmVersion byzantium -Sum
+#>
+function Measure-GasEstimate {
+	param (
+		[Parameter(Position = 0, HelpMessage = '*.sol file location')]
+		[Alias('Url')]
+		[string[]]$Path,
+		[ValidateSet('homestead', 'tangerineWhistle', 'spuriousDragon', 'byzantium', 'constantinople')]
+		[string]$EvmVersion,
+		[uint64]$OptimizeRuns,
+		[Alias('Total')]
+		[switch]$Sum
+	)
+
+	$PSBoundParameters.Remove('Sum')
+	$output = solcps @PSBoundParameters | ConvertFrom-Json -AsHashtable
+
+	foreach ($contracts in $output.contracts.Values) {
+		foreach ($name in $contracts.Keys) {
+			$estimate = $contracts.$name.evm.gasEstimates
+			$creation = $estimate.creation
+			$external = $estimate.external
+			$internal = $estimate.internal
+			if ($Sum) {
+				[pscustomobject]@{
+					Name     = $name
+					Creation = $creation.totalCost
+					External = if ($external.Values -contains 'infinite') {
+						'infinite'
+					} else {
+						($external.Values | Measure-Object -Sum).Sum
+					}
+					Internal = if ($internal.Values -contains 'infinite') {
+						'infinite'
+					} else {
+						($internal.Values | Measure-Object -Sum).Sum
+					}
+				}
+			} else {
+				[pscustomobject]@{
+					Name     = $name
+					Creation = $creation
+					External = $external
+					Internal = $internal
+				}
+			}
+		}
+	}
+}
+
+<#
+.SYNOPSIS
 	Returns solc version (e.g. 0.4.24)
 .EXAMPLE
 	Get-SolcVersion
