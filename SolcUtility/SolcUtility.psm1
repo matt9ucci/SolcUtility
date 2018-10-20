@@ -158,3 +158,31 @@ function solcps {
 
 	New-StandardJsonInput @PSBoundParameters | ConvertTo-StandardJsonOutput
 }
+
+<#
+.SYNOPSIS
+	Selects objects from solc standard JSON output
+#>
+function Select-StandardJsonOutput {
+	param (
+		[Parameter(Mandatory, ValueFromPipeline)]
+		[string]$StandardJsonOutput,
+		[Parameter(Position = 1, Mandatory)]
+		[ValidateSet('Contract')]
+		[string]$Item
+	)
+
+	$hashTable = $StandardJsonOutput | ConvertFrom-Json -AsHashtable
+	switch ($Item) {
+		Contract {
+			foreach ($contract in $hashTable.contracts.Values) {
+				foreach ($key in $contract.keys) {
+					[pscustomobject]@{
+						Name = $key
+						Artifact = $contract[$key] | ConvertTo-Json -Depth 4 -Compress
+					}
+				}
+			}
+		}
+	}
+}

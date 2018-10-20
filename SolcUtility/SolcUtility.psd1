@@ -15,6 +15,7 @@ FunctionsToExport = @(
 	'Get-SolcVersion'
 	'Measure-GasEstimate'
 	'New-StandardJsonInput'
+	'Select-StandardJsonOutput'
 	'solcps'
 )
 CmdletsToExport   = @()
