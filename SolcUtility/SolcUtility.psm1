@@ -168,7 +168,7 @@ function Select-StandardJsonOutput {
 		[Parameter(Mandatory, ValueFromPipeline)]
 		[string]$StandardJsonOutput,
 		[Parameter(Position = 1, Mandatory)]
-		[ValidateSet('Contract')]
+		[ValidateSet('Contract', 'ABI')]
 		[string]$Item
 	)
 
@@ -180,6 +180,16 @@ function Select-StandardJsonOutput {
 					[pscustomobject]@{
 						Name = $key
 						Artifact = $contract[$key] | ConvertTo-Json -Depth 4 -Compress
+					}
+				}
+			}
+		}
+		ABI {
+			foreach ($contract in $hashTable.contracts.Values) {
+				foreach ($key in $contract.keys) {
+					[pscustomobject]@{
+						Name = $key
+						ABI = $contract[$key].abi | ConvertTo-Json -Compress
 					}
 				}
 			}
