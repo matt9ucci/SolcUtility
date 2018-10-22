@@ -168,31 +168,34 @@ function Select-StandardJsonOutput {
 		[Parameter(Mandatory, ValueFromPipeline)]
 		[string]$StandardJsonOutput,
 		[Parameter(Position = 1, Mandatory)]
-		[ValidateSet('Contract', 'ABI')]
+		[ValidateSet('Contract', 'ABI', 'Bytecode')]
 		[string]$Item
 	)
 
 	$hashTable = $StandardJsonOutput | ConvertFrom-Json -AsHashtable
+	$selected = @{}
 	switch ($Item) {
 		Contract {
 			foreach ($contract in $hashTable.contracts.Values) {
 				foreach ($key in $contract.keys) {
-					[pscustomobject]@{
-						Name = $key
-						Artifact = $contract[$key] | ConvertTo-Json -Depth 4 -Compress
-					}
+					$selected.Add($key, ($contract[$key] | ConvertTo-Json -Depth 4 -Compress))
 				}
 			}
 		}
 		ABI {
 			foreach ($contract in $hashTable.contracts.Values) {
 				foreach ($key in $contract.keys) {
-					[pscustomobject]@{
-						Name = $key
-						ABI = $contract[$key].abi | ConvertTo-Json -Compress
-					}
+					$selected.Add($key, ($contract[$key].abi | ConvertTo-Json -Compress))
+				}
+			}
+		}
+		Bytecode {
+			foreach ($contract in $hashTable.contracts.Values) {
+				foreach ($key in $contract.keys) {
+					$selected.Add($key, ($contract[$key].evm.bytecode.object))
 				}
 			}
 		}
 	}
+	$selected
 }
