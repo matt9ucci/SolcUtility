@@ -168,7 +168,7 @@ function Select-StandardJsonOutput {
 		[Parameter(Mandatory, ValueFromPipeline)]
 		[string]$StandardJsonOutput,
 		[Parameter(Position = 1, Mandatory)]
-		[ValidateSet('Contract', 'ABI', 'Bytecode')]
+		[ValidateSet('Contract', 'ABI', 'Bytecode', 'Opcode')]
 		[string]$Item
 	)
 
@@ -193,6 +193,13 @@ function Select-StandardJsonOutput {
 			foreach ($contract in $hashTable.contracts.Values) {
 				foreach ($key in $contract.keys) {
 					$selected.Add($key, ($contract[$key].evm.bytecode.object))
+				}
+			}
+		}
+		Opcode {
+			foreach ($contract in $hashTable.contracts.Values) {
+				foreach ($key in $contract.keys) {
+					$selected.Add($key, ($contract[$key].evm.bytecode.opcodes))
 				}
 			}
 		}
